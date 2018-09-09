@@ -284,6 +284,10 @@ namespace NUnit.Framework.Internal.Execution
                 if (CheckForCancellation())
                     break;
 
+                bool alwaysRecreateFixture = true;
+                if (alwaysRecreateFixture)
+                    PerformOneTimeSetUp();
+
                 child.Completed += new EventHandler(OnChildItemCompleted);
                 child.InitializeContext(new TestExecutionContext(Context));
 
@@ -294,6 +298,9 @@ namespace NUnit.Framework.Internal.Execution
 
                 Context.Dispatcher.Dispatch(child);
                 childCount--;
+
+                if (alwaysRecreateFixture && Context.ExecutionStatus != TestExecutionStatus.AbortRequested)
+                    PerformOneTimeTearDown();
             }
 
             // If run was cancelled, reduce countdown by number of
