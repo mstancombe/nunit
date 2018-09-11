@@ -25,57 +25,23 @@ using NUnit.Framework;
 
 namespace NUnit.Tests
 {
-    [Parallelizable(ParallelScope.All)]
-    public class SlowTests
+    [TestFixture, Parallelizable(ParallelScope.All)]
+    public class AAA
     {
         const int DELAY = 1000;
+        public string SampleState;
 
-        public class AAA
+        public static string[] GetTestCases() 
+            => new string[] { "1", "2", "3", "4", "5", "6" };
+
+        [TestCaseSource(nameof(GetTestCases))]
+        public void TestFromSource(string testNumber)
         {
-            public string SampleState;
-
-            [Test]
-            public void Test1() {
-                SampleState = "1";
-                SlowTests.Delay();
-                Assert.AreEqual("1", SampleState);
-            }
-
-            [Test]
-            public void Test2() {
-                SampleState = "2";
-                SlowTests.Delay();
-                Assert.AreEqual("2", SampleState);
-            }
-
-            [Test]
-            public void Test3() {
-                SampleState = "3";
-                SlowTests.Delay();
-                Assert.AreEqual("3", SampleState);
-            }
-
+            SampleState = testNumber;
+            Delay();
+            Assert.AreEqual(testNumber, SampleState);
         }
 
-        //public class BBB
-        //{
-        //    [Test]
-        //    public void Test1() { SlowTests.Delay(); }
-        //    [Test]
-        //    public void Test2() { SlowTests.Delay(); }
-        //    [Test]
-        //    public void Test3() { SlowTests.Delay(); }
-        //}
-
-        //public class CCC
-        //{
-        //    [Test]
-        //    public void Test1() { SlowTests.Delay(); }
-        //    [Test]
-        //    public void Test2() { SlowTests.Delay(); }
-        //    [Test]
-        //    public void Test3() { SlowTests.Delay(); }
-        //}
 
         private static void Delay()
         {
